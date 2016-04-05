@@ -29,36 +29,89 @@ Quantity = Space.domain.ValueObject.extend('Quantity', {
     return "" + this.value;
   },
 
-  isMore(other) {
-    return this.value > this._getCleanValue(other);
+  toNumber() {
+    return this.value;
   },
 
-  isLess(other) {
-    return this.value < this._getCleanValue(other);
+  valueOf() {
+    return this.value;
+  },
+
+  isEqual(other) {
+    return new BigNumber(this.value).isEqual(
+      this._instantiateOrReturn(other)
+    );
+  },
+
+  isGreaterThan(other) {
+    return new BigNumber(this.value).isGreaterThan(
+      this._instantiateOrReturn(other)
+    );
+  },
+
+  isGreaterThanOrEqualTo(other) {
+    return new BigNumber(this.value).isGreaterThanOrEqualTo(
+      this._instantiateOrReturn(other)
+    );
+  },
+
+  isLessThan(other) {
+    return new BigNumber(this.value).isLessThan(
+      this._instantiateOrReturn(other)
+    );
+  },
+
+  isLessThanOrEqualTo(other) {
+    return new BigNumber(this.value).isLessThanOrEqualTo(
+      this._instantiateOrReturn(other)
+    );
   },
 
   add(other) {
-    let toAdd = other;
-    if (!(toAdd instanceof Quantity)) {
-      toAdd = new Quantity(other);
-    }
-    return new Quantity(this.value + toAdd.value);
+    let result = new BigNumber(this.value).add(
+      this._instantiateOrReturn(other)
+    ).toNumber();
+    return new Quantity({value: result});
   },
 
   subtract(other) {
-    let toSubtract = other;
-    if (!(toSubtract instanceof Quantity)) {
-      toSubtract = new Quantity(other);
-    }
-    return new Quantity(this.value - toSubtract.value);
+    let result = new BigNumber(this.value).subtract(
+      this._instantiateOrReturn(other)
+    ).toNumber();
+    return new Quantity({value: result});
+  },
+
+  multiply(other) {
+    let result = new BigNumber(this.value).multiply(
+      this._instantiateOrReturn(other)
+    ).toNumber();
+    return new Quantity({value: result});
+  },
+
+  divide(other) {
+    let result = new BigNumber(this.value).divide(
+      this._instantiateOrReturn(other)
+    ).toNumber();
+    return new Quantity({value: result});
+  },
+
+  percentage(percentage) {
+    let result = new BigNumber(this.value).percentage(percentage).toNumber();
+    return new Quantity({value: result});
   },
 
   delta(other) {
-    return this.value - this._getCleanValue(other);
+    return new BigNumber(this.value).subtract(
+      this._instantiateOrReturn(other)
+    ).toNumber();
   },
 
-  _getCleanValue(other) {
-    return (other instanceof Quantity) ? other.value : other;
+  _instantiateOrReturn(other) {
+    let instance = other;
+    if (!(instance instanceof Quantity)) {
+      instance = new Quantity(other);
+    }
+    return instance.value;
   }
 
 });
@@ -67,3 +120,14 @@ Quantity.ERRORS = {
   invalidType: 'Quantity must be an integer.',
   invalidRange: 'Quantity must be bigger than 0.'
 };
+
+Quantity.prototype.eq = Quantity.prototype.isEqual
+Quantity.prototype.isMore = Quantity.prototype.gt = Quantity.prototype.greaterThan = Quantity.prototype.isGreaterThan
+Quantity.prototype.gte = Quantity.prototype.greaterThanOrEqualTo = Quantity.prototype.isGreaterThanOrEqualTo
+Quantity.prototype.isLess = Quantity.prototype.lt = Quantity.prototype.lessThan = Quantity.prototype.isLessThan
+Quantity.prototype.lte = Quantity.prototype.lessThanOrEqualTo = Quantity.prototype.isLessThanOrEqualTo
+Quantity.prototype.plus = Quantity.prototype.add
+Quantity.prototype.sub = Quantity.prototype.minus = Quantity.prototype.subtract
+Quantity.prototype.div = Quantity.prototype.dividedBy = Quantity.prototype.divide
+Quantity.prototype.mul = Quantity.prototype.times = Quantity.prototype.multiply
+Quantity.prototype.percent = Quantity.prototype.percentOf = Quantity.prototype.percentage
