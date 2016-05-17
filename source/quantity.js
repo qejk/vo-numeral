@@ -74,11 +74,19 @@ Quantity = Space.domain.ValueObject.extend('Quantity', {
     return new Quantity({value: result});
   },
 
+  increment() {
+    return this.add(new Quantity({value: 1}));
+  },
+
   subtract(other) {
     let result = new BigNumber(this.value).subtract(
       this._instantiateOrReturn(other)
     ).toNumber();
     return new Quantity({value: result});
+  },
+
+  decrement() {
+    return this.subtract(new Quantity({value: 1}));
   },
 
   multiply(other) {
@@ -127,7 +135,9 @@ Quantity.prototype.gte = Quantity.prototype.greaterThanOrEqualTo = Quantity.prot
 Quantity.prototype.isLess = Quantity.prototype.lt = Quantity.prototype.lessThan = Quantity.prototype.isLessThan
 Quantity.prototype.lte = Quantity.prototype.lessThanOrEqualTo = Quantity.prototype.isLessThanOrEqualTo
 Quantity.prototype.plus = Quantity.prototype.add
+Quantity.prototype.inc = Quantity.prototype.increment
 Quantity.prototype.sub = Quantity.prototype.minus = Quantity.prototype.subtract
+Quantity.prototype.dec = Quantity.prototype.decrement
 Quantity.prototype.div = Quantity.prototype.dividedBy = Quantity.prototype.divide
 Quantity.prototype.mul = Quantity.prototype.times = Quantity.prototype.multiply
 Quantity.prototype.percent = Quantity.prototype.percentOf = Quantity.prototype.percentage
