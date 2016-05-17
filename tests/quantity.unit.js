@@ -234,7 +234,7 @@ describe("Quantity", function() {
         expect(result.value).to.equal(3);
       });
 
-      it("throws error if plain number is not a valid quantity", function() {
+      it("does not allow value outside the boundaries", function() {
         expect(function() {
           new Quantity(1).add(-1);
         }).to.throw(Quantity.ERRORS.invalidRange);
@@ -252,6 +252,20 @@ describe("Quantity", function() {
 
     });
 
+
+    describe("increment", function() {
+
+      it("returns a new quantity with value +1", function() {
+        quantity = new Quantity(1).increment()
+        expect(quantity).to.be.instanceof(Quantity);
+        expect(quantity.value).to.equal(2);
+      });
+
+      it('aliases', function() {
+        expect(Quantity.prototype.inc === Quantity.prototype.increment).to.be.true;
+      });
+    });
+
     describe("subtraction", function() {
 
       it("returns a new quantity with the difference of both", function() {
@@ -266,7 +280,7 @@ describe("Quantity", function() {
         expect(result.value).to.equal(1);
       });
 
-      it("throws error if plain number is not a valid quantity", function() {
+      it("does not allow value outside the boundaries", function() {
         expect(function() {
           new Quantity(1).subtract(-1);
         }).to.throw(Quantity.ERRORS.invalidRange);
@@ -289,6 +303,25 @@ describe("Quantity", function() {
 
     });
 
+    describe("decrement", function() {
+
+      it("returns a new quantity with value +1", function() {
+        quantity = new Quantity(1).decrement()
+        expect(quantity).to.be.instanceof(Quantity);
+        expect(quantity.value).to.equal(0);
+      });
+
+      it("does not allow value outside the boundaries", function() {
+        expect(function() {
+          new Quantity(0).decrement();
+        }).to.throw(Quantity.ERRORS.invalidRange);
+      });
+
+      it('aliases', function() {
+        expect(Quantity.prototype.dec === Quantity.prototype.decrement).to.be.true;
+      });
+    });
+
     describe('multiplication', function() {
 
       it('returns a new quantity with value multiplied by another', function() {
@@ -305,7 +338,7 @@ describe("Quantity", function() {
         expect(result.value).to.equal(4);
       });
 
-      it("throws error if plain number is not a valid quantity", function() {
+      it("does not allow value outside the boundaries", function() {
         expect(function() {
           new Quantity(1).multiply(-1);
         }).to.throw(Quantity.ERRORS.invalidRange);
@@ -412,30 +445,10 @@ describe("Quantity", function() {
         expect(result).to.equal(4);
       });
 
-      it("throws error if plain number is not a valid quantity", function() {
-        expect(function() {
-          new Quantity(1).delta(-1);
-        }).to.throw(Quantity.ERRORS.invalidRange);
-      });
-
       it("throws error if plain number is not a integer", function() {
         expect(function() {
           new Quantity(1).delta(0.2);
         }).to.throw(Error);
-      });
-
-    });
-
-    describe("calculating the delta between quantities", function() {
-
-      it("returns the difference", function() {
-        expect(new Quantity(2).delta(new Quantity(1))).to.equal(1);
-        expect(new Quantity(1).delta(new Quantity(3))).to.equal(-2);
-      });
-
-      it("also handles plain numbers", function() {
-        expect(new Quantity(2).delta(1)).to.equal(1);
-        expect(new Quantity(1).delta(3)).to.equal(-2);
       });
 
     });
